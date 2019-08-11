@@ -12,14 +12,15 @@ import UIKit
     @objc optional func collectionView(_ collectionView: UICollectionView, headerSectionInsetAt section: Int) -> UIEdgeInsets
     @objc optional func collectionView(_ collectionView: UICollectionView, headerItemSizeAtIndexPath indexPath: IndexPath) -> CGSize
     @objc optional func collectionView(_ collectionView: UICollectionView, interItemSpacingForSection section: Int) -> CGFloat
+    @objc optional func collectionView(_ collectionView: UICollectionView, headerSizeForSection section: Int) -> CGSize
 }
 
 public class HeaderFlowLayout: UICollectionViewLayout {
     
     // MARK: - Properties
     weak var delegate: HeaderFlowLayoutDelegate?
-    var sectionHeaderAttributes: [IndexPath: UICollectionViewLayoutAttributes] = [:]
 
+    var headerAttributes: [IndexPath: UICollectionViewLayoutAttributes] = [:]
     var itemAttributes: [IndexPath: UICollectionViewLayoutAttributes] = [:]
     var currentX: CGFloat = 0.0
     var currentY: CGFloat = 0.0
@@ -53,10 +54,17 @@ public class HeaderFlowLayout: UICollectionViewLayout {
         return itemAttributes[indexPath]
     }
 
-//    override func layoutAttributesForSupplementaryView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-//
-//    }
-//
+    override public func layoutAttributesForSupplementaryView(ofKind elementKind: String,
+                                                       at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+        switch elementKind {
+        case UICollectionView.elementKindSectionHeader:
+            return headerAttributes[indexPath]
+        default:
+            return nil
+        }
+
+    }
+
     override public func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         return true
     }
@@ -146,6 +154,49 @@ extension HeaderFlowLayout {
         return delegate.collectionView?(_collectionView, interItemSpacingForSection: section) ?? defaultItemSpacing
     }
     
+}
+
+// MARK: - Header Attributes
+extension HeaderFlowLayout {
+    private func headerAttributes(atIndexPath indexPath: IndexPath) -> [IndexPath: UICollectionViewLayoutAttributes] {
+        guard let _collectionView = collectionView else {
+            return [:]
+        }
+        let noOfSections = _collectionView.numberOfSections
+        guard noOfSections > 0 else {
+            return [:]
+        }
+        let attributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                                          with: indexPath)
+        let origin = headerOrigin(atIndexPath: indexPath)
+        let size = sizeOfHeader(atSection: indexPath.section)
+        attributes.frame = CGRect(x: origin.x,
+                                  y: origin.y,
+                                  width: size.width,
+                                  height: size.height)
+        headerAttributes[indexPath] = attributes
+        return headerAttributes
+    }
+
+    private func sizeOfHeader(atSection section: Int) -> CGSize {
+        let defaultSize: CGSize = .zero
+        guard let _collectionView = collectionView,
+            let delegate = _collectionView.delegate as? HeaderFlowLayoutDelegate else {
+            return defaultSize
+        }
+        return delegate.collectionView?(_collectionView, headerSizeForSection: section) ?? defaultSize
+    }
+
+    private func headerOrigin(atIndexPath indexPath: IndexPath) -> CGPoint {
+      //  guard let noOfItems = collectionView?.numberOfItems(inSection: indexPath.section) else {
+            return CGPoint(x: inset(forSection: indexPath.section).left, y: 0)
+        }
+        guard let itemAttributes = layoutAttributesForItem(at: IndexPath(item: 0, section: indexPath.section)) else {
+            return CGPoint(x: inset(forSection: indexPath.section).left, y: 0)
+        }
+        return CGPoint(x: itemAttributes.frame.minX, y: 0)
+    }
+
 }
 
 // MARK: - Content Size
