@@ -8,12 +8,12 @@
 
 import UIKit
 
-@objc protocol HeaderFlowLayoutDelegate: class {
+@objc public protocol HeaderFlowLayoutDelegate: class {
     @objc optional func collectionView(_ collectionView: UICollectionView, headerSectionInsetAt section: Int) -> UIEdgeInsets
     @objc optional func collectionView(_ collectionView: UICollectionView, headerItemSizeAtIndexPath indexPath: IndexPath) -> CGSize
 }
 
-class HeaderFlowLayout: UICollectionViewLayout {
+public class HeaderFlowLayout: UICollectionViewLayout {
     
     // MARK: - Properties
     weak var delegate: HeaderFlowLayoutDelegate?
@@ -24,18 +24,18 @@ class HeaderFlowLayout: UICollectionViewLayout {
     var currentY: CGFloat = 0.0
 
     /// Provides content size to collectionView
-    override var collectionViewContentSize: CGSize {
+    override public var collectionViewContentSize: CGSize {
         get {
             return contentSize()
         }
     }
 
     /// Prepares item attributes for the collectionView
-    override func prepare() {
+    override public func prepare() {
         prepareItemAttributes()
     }
     
-    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+    override public func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         super.layoutAttributesForElements(in: rect)
         var finalAttributes = [UICollectionViewLayoutAttributes]()
         for (_, attribute) in itemAttributes {
@@ -48,7 +48,7 @@ class HeaderFlowLayout: UICollectionViewLayout {
         return finalAttributes
     }
 
-    override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+    override public func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         return itemAttributes[indexPath]
     }
 
@@ -56,7 +56,7 @@ class HeaderFlowLayout: UICollectionViewLayout {
 //
 //    }
 //
-    override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+    override public func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         return true
     }
 
