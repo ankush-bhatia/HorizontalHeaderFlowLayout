@@ -2,7 +2,7 @@ Pod::Spec.new do |spec|
 
 # 1
 spec.platform = :ios
-spec.ios.deployment_target = '12.0'
+spec.ios.deployment_target = '9.0'
 spec.name = "HorizontalHeaderFlowLayout"
 spec.summary = "Horizontal Header FlowLayout for Horizontal Collection View."
 spec.description = <<-DESC
