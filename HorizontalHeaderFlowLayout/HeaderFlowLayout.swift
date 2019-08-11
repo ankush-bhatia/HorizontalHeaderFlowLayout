@@ -11,6 +11,7 @@ import UIKit
 @objc public protocol HeaderFlowLayoutDelegate: class {
     @objc optional func collectionView(_ collectionView: UICollectionView, headerSectionInsetAt section: Int) -> UIEdgeInsets
     @objc optional func collectionView(_ collectionView: UICollectionView, headerItemSizeAtIndexPath indexPath: IndexPath) -> CGSize
+    @objc optional func collectionView(_ collectionView: UICollectionView, interItemSpacingForSection section: Int) -> CGFloat
 }
 
 public class HeaderFlowLayout: UICollectionViewLayout {
@@ -110,7 +111,8 @@ extension HeaderFlowLayout {
         let itemSize = sizeOfItem(at: indexPath)
         attributes.frame = CGRect(origin: itemOrigin(),
                                   size: itemSize)
-        updateVariables(for: itemSize)
+        updateVariables(for: itemSize,
+                        atIndexPath: indexPath)
         return attributes
     }
 
@@ -121,8 +123,9 @@ extension HeaderFlowLayout {
         return origin
     }
 
-    private func updateVariables(for frame: CGSize) {
-        currentX += frame.width
+    private func updateVariables(for frame: CGSize,
+                                 atIndexPath indexPath: IndexPath) {
+        currentX += frame.width + itemSpacing(forSection: indexPath.section)
     }
 
     private func sizeOfItem(at indexPath: IndexPath) -> CGSize {
@@ -132,6 +135,15 @@ extension HeaderFlowLayout {
             return defaultSize
         }
         return delegate.collectionView?(_collectionView, headerItemSizeAtIndexPath: indexPath) ?? defaultSize
+    }
+
+    private func itemSpacing(forSection section: Int) -> CGFloat {
+        let defaultItemSpacing: CGFloat = 0.0
+        guard let _collectionView = collectionView,
+            let delegate = _collectionView.delegate as? HeaderFlowLayoutDelegate else {
+                return defaultItemSpacing
+        }
+        return delegate.collectionView?(_collectionView, interItemSpacingForSection: section) ?? defaultItemSpacing
     }
     
 }
@@ -152,7 +164,7 @@ extension HeaderFlowLayout {
         } else {
             maxX = 0.0
         }
-        
+
         let contentWidth = maxX + inset(forSection: lastSectionIndex).right
         let contentHeight = collectionView.bounds.size.height - collectionView.contentInset.top - collectionView.contentInset.bottom
         return CGSize(width: contentWidth, height: contentHeight)
