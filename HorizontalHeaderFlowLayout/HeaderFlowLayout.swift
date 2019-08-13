@@ -20,7 +20,12 @@ public class HeaderFlowLayout: UICollectionViewLayout {
     // MARK: - Properties
     weak var delegate: HeaderFlowLayoutDelegate?
 
-    var headerAttributes: [IndexPath: UICollectionViewLayoutAttributes] = [:]
+    var headerAttributes: [IndexPath: UICollectionViewLayoutAttributes] {
+        get {
+            return getSectionHeaderAttributes()
+        }
+    }
+    
     var itemAttributes: [IndexPath: UICollectionViewLayoutAttributes] = [:]
     var currentX: CGFloat = 0.0
     var currentY: CGFloat = 0.0
@@ -45,9 +50,9 @@ public class HeaderFlowLayout: UICollectionViewLayout {
                 finalAttributes.append(attribute)
             }
         }
-
-        // TODO: - Add Header Attributes
-        return finalAttributes
+        
+        let sectionHeaderAttributes = Array(headerAttributes.values)
+        return finalAttributes + sectionHeaderAttributes
     }
 
     override public func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
@@ -117,23 +122,29 @@ extension HeaderFlowLayout {
         let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
         attributes.alpha = 1.0
         let itemSize = sizeOfItem(at: indexPath)
-        attributes.frame = CGRect(origin: itemOrigin(),
+        attributes.frame = CGRect(origin: itemOrigin(for: indexPath),
                                   size: itemSize)
         updateVariables(for: itemSize,
                         atIndexPath: indexPath)
         return attributes
     }
 
-    private func itemOrigin() -> CGPoint {
+    private func itemOrigin(for indexPath: IndexPath) -> CGPoint {
         var origin: CGPoint = .zero
         origin.x = currentX
+        if indexPath.section == 0 && indexPath.row == 0 {
+            let sectionInset = inset(forSection: indexPath.section)
+            currentY = sectionInset.top + sizeOfHeader(atSection: indexPath.section).height
+        }
         origin.y = currentY
         return origin
     }
 
     private func updateVariables(for frame: CGSize,
                                  atIndexPath indexPath: IndexPath) {
+        let sectionInset = inset(forSection: indexPath.section)
         currentX += frame.width + itemSpacing(forSection: indexPath.section)
+        currentY = sectionInset.top + sizeOfHeader(atSection: indexPath.section).height
     }
 
     private func sizeOfItem(at indexPath: IndexPath) -> CGSize {
@@ -158,7 +169,7 @@ extension HeaderFlowLayout {
 
 // MARK: - Header Attributes
 extension HeaderFlowLayout {
-    private func headerAttributes(atIndexPath indexPath: IndexPath) -> [IndexPath: UICollectionViewLayoutAttributes] {
+    private func getSectionHeaderAttributes() -> [IndexPath: UICollectionViewLayoutAttributes] {
         guard let _collectionView = collectionView else {
             return [:]
         }
@@ -166,6 +177,16 @@ extension HeaderFlowLayout {
         guard noOfSections > 0 else {
             return [:]
         }
+        var attributes = [IndexPath: UICollectionViewLayoutAttributes]()
+        for section in 0..<noOfSections {
+            let indexPath = IndexPath(row: 0, section: section)
+            attributes[indexPath] = headerAttributes(atIndexPath: indexPath)
+        }
+        return attributes
+    }
+    
+    private func headerAttributes(atIndexPath indexPath: IndexPath) -> UICollectionViewLayoutAttributes {
+        
         let attributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                                           with: indexPath)
         let origin = headerOrigin(atIndexPath: indexPath)
@@ -174,8 +195,7 @@ extension HeaderFlowLayout {
                                   y: origin.y,
                                   width: size.width,
                                   height: size.height)
-        headerAttributes[indexPath] = attributes
-        return headerAttributes
+        return attributes
     }
 
     private func sizeOfHeader(atSection section: Int) -> CGSize {
@@ -186,15 +206,22 @@ extension HeaderFlowLayout {
         }
         return delegate.collectionView?(_collectionView, headerSizeForSection: section) ?? defaultSize
     }
-
+    
     private func headerOrigin(atIndexPath indexPath: IndexPath) -> CGPoint {
-      //  guard let noOfItems = collectionView?.numberOfItems(inSection: indexPath.section) else {
-            return CGPoint(x: inset(forSection: indexPath.section).left, y: 0)
+        if let itemsCount = collectionView?.numberOfItems(inSection: indexPath.section),
+            let firstItemAttributes = layoutAttributesForItem(at: indexPath),
+            let lastItemAttributes = layoutAttributesForItem(at: IndexPath(row: itemsCount-1, section: indexPath.section)){
+            let edgeX = collectionView!.contentOffset.x + collectionView!.contentInset.left
+            let xByLeftBoundary = max(edgeX,firstItemAttributes.frame.minX)
+            //
+            let width = sizeOfHeader(atSection: indexPath.section).width
+            let xByRightBoundary = lastItemAttributes.frame.maxX - width
+            let x = min(xByLeftBoundary,xByRightBoundary)
+            return CGPoint(x: x, y: 0)
+        }else{
+            return CGPoint(x: inset(forSection: indexPath.section).left,
+                           y:0)
         }
-        guard let itemAttributes = layoutAttributesForItem(at: IndexPath(item: 0, section: indexPath.section)) else {
-            return CGPoint(x: inset(forSection: indexPath.section).left, y: 0)
-        }
-        return CGPoint(x: itemAttributes.frame.minX, y: 0)
     }
 
 }
