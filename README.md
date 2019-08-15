@@ -34,7 +34,7 @@ pod 'HorizontalHeaderFlowLayout', '~> 1.0'
 #### From Storyboard:
 **1.** Change layout of CollectionView to custom and assign HeaderFlowLayout as class.
 
-![](Image URL to storyboard)
+![](Images/storyboard.png)
 
 **2.** Import Framework
 ```swift
