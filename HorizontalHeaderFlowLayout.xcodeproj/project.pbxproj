@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		964BDD0A2305E30C007EA8FC /* HeaderFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964BDD092305E30C007EA8FC /* HeaderFlowLayout.swift */; };
 		96D120ED230064F8005B0967 /* HorizontalHeaderFlowLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D120E3230064F8005B0967 /* HorizontalHeaderFlowLayout.framework */; };
 		96D120F2230064F8005B0967 /* HorizontalHeaderFlowLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D120F1230064F8005B0967 /* HorizontalHeaderFlowLayoutTests.swift */; };
 		96D120F4230064F8005B0967 /* HorizontalHeaderFlowLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 96D120E6230064F8005B0967 /* HorizontalHeaderFlowLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -23,6 +24,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		964BDD092305E30C007EA8FC /* HeaderFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderFlowLayout.swift; sourceTree = "<group>"; };
 		96D120E3230064F8005B0967 /* HorizontalHeaderFlowLayout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HorizontalHeaderFlowLayout.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96D120E6230064F8005B0967 /* HorizontalHeaderFlowLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HorizontalHeaderFlowLayout.h; sourceTree = "<group>"; };
 		96D120E7230064F8005B0967 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 		96D120E5230064F8005B0967 /* HorizontalHeaderFlowLayout */ = {
 			isa = PBXGroup;
 			children = (
+				964BDD092305E30C007EA8FC /* HeaderFlowLayout.swift */,
 				96D120E6230064F8005B0967 /* HorizontalHeaderFlowLayout.h */,
 				96D120E7230064F8005B0967 /* Info.plist */,
 			);
@@ -148,6 +151,7 @@
 				TargetAttributes = {
 					96D120E2230064F8005B0967 = {
 						CreatedOnToolsVersion = 10.2.1;
+						LastSwiftMigration = 1020;
 					};
 					96D120EB230064F8005B0967 = {
 						CreatedOnToolsVersion = 10.2.1;
@@ -194,6 +198,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				964BDD0A2305E30C007EA8FC /* HeaderFlowLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,6 +346,7 @@
 		96D120F8230064F8005B0967 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;
 				DEFINES_MODULE = YES;
@@ -359,6 +365,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -367,6 +374,7 @@
 		96D120F9230064F8005B0967 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;
 				DEFINES_MODULE = YES;
@@ -393,6 +401,7 @@
 		96D120FB230064F8005B0967 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = HorizontalHeaderFlowLayoutTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -410,6 +419,7 @@
 		96D120FC230064F8005B0967 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = HorizontalHeaderFlowLayoutTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

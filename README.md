@@ -22,7 +22,7 @@
 #### Cocoapods
 Add the following line to your Podfile:
 ```
-pod 'HorizontalHeaderFlowLayout', '~> 1.0'
+pod 'HorizontalHeaderFlowLayout', '~> 1.0.1'
 ```
 
 #### Manually

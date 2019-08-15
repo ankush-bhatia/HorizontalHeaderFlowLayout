@@ -8,13 +8,6 @@
 
 import UIKit
 
-@objc public protocol HeaderFlowLayoutDelegate: class {
-    @objc optional func collectionView(_ collectionView: UICollectionView, headerSectionInsetAt section: Int) -> UIEdgeInsets
-    @objc optional func collectionView(_ collectionView: UICollectionView, headerItemSizeAtIndexPath indexPath: IndexPath) -> CGSize
-    @objc optional func collectionView(_ collectionView: UICollectionView, interItemSpacingForSection section: Int) -> CGFloat
-    @objc optional func collectionView(_ collectionView: UICollectionView, headerSizeForSection section: Int) -> CGSize
-}
-
 public class HeaderFlowLayout: UICollectionViewLayout {
     
     // MARK: - Properties
@@ -25,10 +18,26 @@ public class HeaderFlowLayout: UICollectionViewLayout {
             return getSectionHeaderAttributes()
         }
     }
-    
-    var itemAttributes: [IndexPath: UICollectionViewLayoutAttributes] = [:]
-    var currentX: CGFloat = 0.0
-    var currentY: CGFloat = 0.0
+
+    @IBInspectable
+    public var layoutScrollDirection: LayoutScrollDirection {
+        get {
+            return scrollDirection
+        }
+        set {
+            scrollDirection = newValue
+        }
+    }
+
+    private var scrollDirection: LayoutScrollDirection = .horizontal {
+        didSet {
+            prepare()
+        }
+    }
+
+    private var itemAttributes: [IndexPath: UICollectionViewLayoutAttributes] = [:]
+    private var currentX: CGFloat = 0.0
+    private var currentY: CGFloat = 0.0
 
     /// Provides content size to collectionView
     override public var collectionViewContentSize: CGSize {
@@ -90,7 +99,7 @@ public class HeaderFlowLayout: UICollectionViewLayout {
 
 // MARK: - Prepare Item Attributes
 extension HeaderFlowLayout {
-    func prepareItemAttributes() {
+    private func prepareItemAttributes() {
         guard let _collectionView = collectionView else {
             return
         }
@@ -153,7 +162,7 @@ extension HeaderFlowLayout {
             let delegate = _collectionView.delegate as? HeaderFlowLayoutDelegate else {
             return defaultSize
         }
-        return delegate.collectionView?(_collectionView, headerItemSizeAtIndexPath: indexPath) ?? defaultSize
+        return delegate.collectionView(_collectionView, itemSizeAtIndexPath: indexPath)
     }
 
     private func itemSpacing(forSection section: Int) -> CGFloat {
@@ -258,6 +267,11 @@ extension HeaderFlowLayout {
             section >= 0 else {
             return defaultInsets
         }
-        return delegate.collectionView?(_collectionView, headerSectionInsetAt: section) ?? defaultInsets
+        return delegate.collectionView?(_collectionView, sectionInsetAt: section) ?? defaultInsets
     }
+}
+
+// MARK: - Public API
+extension HeaderFlowLayout {
+
 }
