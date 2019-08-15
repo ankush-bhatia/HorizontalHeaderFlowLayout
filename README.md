@@ -16,7 +16,7 @@
 
 ## Installation
 
-- HorizontalHeaderFlowLayout is available on [CocoaPods](https://cocoapods.org).
+- HorizontalHeaderFlowLayout is available on [CocoaPods](https://cocoapods.org/pods/HorizontalHeaderFlowLayout).
 - Current version compatible with Swift 4.1.
 
 #### Cocoapods

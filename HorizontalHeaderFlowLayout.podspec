@@ -12,7 +12,7 @@ spec.requires_arc = true
 spec.social_media_url = 'https://twitter.com/ankush1419'
 
 # 2
-spec.version = "1.0.1"
+spec.version = "1.0.0"
 
 # 3
 spec.license = { :type => "MIT", :file => "LICENSE" }
