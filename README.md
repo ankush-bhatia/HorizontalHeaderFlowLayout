@@ -4,6 +4,8 @@
 - HorizontalHeaderFlowLayout is a subclass of UICollectionViewLayout written in pure Swift language.
 - This library uses Apple's UIKit framework.
 
+![](https://media.giphy.com/media/f5vSvNn9Jfh4SZwAnc/giphy.gif)
+
 ## Features
 
 - [x] Easy to use.
